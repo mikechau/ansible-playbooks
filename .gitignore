@@ -1,5 +1,6 @@
 .vagrant/*
 galaxy_roles/*
+!galaxy_roles/.keep
 *.swp
 tmp/*
 !tmp/.keep
