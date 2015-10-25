@@ -1,0 +1,6 @@
+---
+- name: upgrade all packages (centos)
+  yum:
+    name: '*'
+    state: latest
+

@@ -1,0 +1,28 @@
+---
+- name: update package cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: install system packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - software-properties-common
+    - python-software-properties
+    - curl
+    - build-essential
+    - libpq-dev
+    - libssl-dev
+    - libreadline-dev
+    - zlib1g-dev
+    - libffi-dev
+    - libncurses5-dev
+    - libyaml-dev
+    - libxml2
+    - libxml2-dev
+    - libxslt1-dev
+    - libsqlite3-dev
+    - git
+    - autoconf

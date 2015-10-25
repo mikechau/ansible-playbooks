@@ -1,0 +1,12 @@
+---
+- name: add nginx ppa
+  apt_repository:
+    repo: ppa:nginx/stable
+    state: present
+
+- name: install nginx
+  apt:
+    name: "{{ ubuntu_ppa_nginx_package_name | default('nginx-extras') }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600

@@ -1,0 +1,11 @@
+---
+- src: https://github.com/ANXS/postgresql
+  path: galaxy_roles
+  name: ANXS.postgresql
+
+- src: rvm_io.rvm1-ruby
+  path: galaxy_roles
+
+- src: https://github.com/mikechau/ansible-jemalloc.git
+  path: galaxy_roles
+  name: mikechau.jemalloc

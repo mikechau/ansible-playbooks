@@ -1,0 +1,13 @@
+---
+- name: install apt-show-versions
+  apt:
+    name: apt-show-versions
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: upgrade all packages (ubuntu)
+  apt:
+    upgrade: dist
+    update_cache: yes
+    cache_valid_time: 3600

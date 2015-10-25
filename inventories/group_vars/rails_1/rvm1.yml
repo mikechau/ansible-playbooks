@@ -1,0 +1,9 @@
+# TODO: ansible_ssh_user is deprecated in 2.0, remove `*_ssh_*`
+---
+rvm1_user: "{{ ansible_ssh_user }}"
+rvm1_rubies:
+  - ruby-2.2.3
+rvm1_install_flags: --auto-dotfiles --user-install
+rvm1_ruby_install_flags: --with-jemalloc
+rvm1_install_path: "/home/{{ rvm1_user }}/.rvm"
+

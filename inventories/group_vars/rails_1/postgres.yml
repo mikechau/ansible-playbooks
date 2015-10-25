@@ -1,0 +1,29 @@
+---
+postgresql_version: 9.4
+postgresql_encoding: 'UTF-8'
+postgresql_locale: 'en_US.UTF-8'
+
+postgresql_client_encoding: 'UTF8'
+
+postgresql_admin_user: "postgres"
+postgresql_default_auth_method: "trust"
+
+postgresql_cluster_name: "main"
+postgresql_cluster_reset: false
+
+postgresql_databases:
+  - name: rails_1
+    hstore: yes
+    uuid_ossp: yes
+    citext: yes
+
+postgresql_users:
+  - name: rails_1
+    pass: supersecretpassword
+    encrypted: no
+
+postgresql_user_privileges:
+  - name: rails_1
+    db: rails_1
+    priv: "ALL"
+    role_attr_flags: "CREATEDB"

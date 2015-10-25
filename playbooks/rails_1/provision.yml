@@ -1,0 +1,28 @@
+---
+- name: install updated packages
+  hosts: all
+  roles:
+    - role: common
+      sudo: yes
+
+- name: configure database
+  hosts: database
+  roles:
+    - role: ANXS.postgresql
+      sudo: yes
+
+- name: configure application
+  hosts: application
+  roles:
+    - role: development_packages
+      sudo: yes
+
+    - role: mikechau.jemalloc
+      jemalloc_install_from: source
+      sudo: yes
+
+    - role: rvm_io.rvm1-ruby
+      sudo: yes
+
+    - role: nginx
+      sudo: yes
