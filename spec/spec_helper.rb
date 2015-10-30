@@ -4,9 +4,12 @@ require 'tempfile'
 
 Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
 
-set :backend, :ssh
+if ENV['SERVER_SPEC_LOCAL'] || ENV['TRAVIS']
+  set :backend, :exec
 
-unless ENV['SERVER_SPEC_LOCAL']
+else
+  set :backend, :ssh
+
   if ENV['ASK_SUDO_PASSWORD']
     begin
       require 'highline/import'

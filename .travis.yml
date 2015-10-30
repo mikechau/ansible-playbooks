@@ -1,0 +1,39 @@
+---
+language: python
+
+python:
+  - "2.7"
+
+sudo: required
+
+dist: trusty
+
+env:
+  - SCENARIO=rails_1 STRATEGY=provision
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - vendor/bundle
+
+before_install:
+  - which rvm
+  - echo $rvm_path
+
+# install:
+#   - sudo pip install ansible==1.9.4
+#   - bundle install --jobs=3 --retry=3
+#   - ./scripts/galaxy_install.sh
+
+# script:
+#   - "./scripts/syntax_check.sh $SCENARIO $STRATEGY"
+
+#   - ansible-playbook -i test_inventories/$SCENARIO playbooks/$SCENARIO/$STRATEGY.yml --connection=local --sudo -vv
+
+#   - >
+#     ansible-playbook -i test_inventories/$SCENARIO playbooks/$SCENARIO/$STRATEGY.yml --connection=local --sudo
+#     | grep -q 'changed=0.*failed=0'
+#     && (echo 'Idempotence test: pass' && exit 0)
+#     || (echo 'Idempotence test: fail' && exit 1)
+
+#   - TARGET_HOST=$SCENARIO rspec ./spec/$SCENARIO/$STRATEGY_ubuntu_spec.rb
