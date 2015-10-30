@@ -1,0 +1,10 @@
+[application]
+localhost
+
+[database]
+localhost
+
+[rails_1:children]
+application
+database
+
