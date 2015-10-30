@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe 'Ubuntu 14.04 LTS', if: os[:family] == 'ubuntu' do
+  include_examples 'ansible syntax check', 'rails_1', 'provision'
+
   context 'role: common' do
     it 'installed apt-show-versions' do
       expect(package('apt-show-versions')).to be_installed

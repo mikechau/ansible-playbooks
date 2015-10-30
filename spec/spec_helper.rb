@@ -2,6 +2,8 @@ require 'serverspec'
 require 'net/ssh'
 require 'tempfile'
 
+Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
+
 set :backend, :ssh
 
 if ENV['ASK_SUDO_PASSWORD']

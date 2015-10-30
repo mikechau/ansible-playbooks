@@ -6,12 +6,14 @@ task :default => :spec
 
 namespace :spec do
   targets = []
-  Dir.glob('./spec/*').each do |dir|
-    next unless File.directory?(dir)
-    target = File.basename(dir)
-    target = "_#{target}" if target == "default"
-    targets << target
-  end
+  Dir.glob("./spec/*")
+    .reject { |dir| dir['./spec/support'] }
+    .each do |dir|
+      next unless File.directory?(dir)
+      target = File.basename(dir)
+      target = "_#{target}" if target == "default"
+      targets << target
+    end
 
   task :all     => targets
   task :default => :all
