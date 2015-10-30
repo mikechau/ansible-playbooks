@@ -61,6 +61,10 @@ describe 'Ubuntu 14.04 LTS', if: os[:family] == 'ubuntu' do
         expect(service('postgresql')).to be_running
       end
     end
+
+    it 'is listening on port 5432' do
+      expect(port(5432)).to be_listening
+    end
   end
 
   context 'role: development_packages' do

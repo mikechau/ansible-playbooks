@@ -35,7 +35,7 @@ Vagrant.configure(2) do |config|
       vb.customize ['modifyvm', :id, '--cpus', '2']
     end
 
-    v.vm.provision :ansible do |ansible|
+    v.vm.provision 'ansible' do |ansible|
       ansible.limit = 'all'
       ansible.inventory_path = 'inventories/rails_1'
       ansible.playbook = 'playbooks/rails_1/provision.yml'
