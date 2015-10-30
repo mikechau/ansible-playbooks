@@ -127,5 +127,9 @@ describe 'Ubuntu 14.04 LTS', if: os[:family] == 'ubuntu' do
         expect(service('nginx')).to be_running
       end
     end
+
+    it 'is listening on port 80' do
+      expect(port(80)).to be_listening
+    end
   end
 end
