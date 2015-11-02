@@ -30,8 +30,8 @@ script:
 
   - >
     ./scripts/ansible_docker_run.sh
-    | grep -q 'changed=0.*failed=0'
+    | grep -q 'changed=0.*unreachable=0.*failed=0.*'
     && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
+    || (echo 'Idempotence test: fail' && cat tmp/ansible.log && exit 1)
 
-  - rspec ./spec/$SCENARIO/$RSPEC_TEST_NAME.rb
+  - "rspec ./spec/${SCENARIO}/${RSPEC_TEST_NAME}.rb"

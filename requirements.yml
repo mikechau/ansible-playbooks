@@ -1,5 +1,5 @@
 ---
-- src: https://github.com/ANXS/postgresql
+- src: https://github.com/mikechau/postgresql
   path: galaxy_roles
   name: ANXS.postgresql
 
