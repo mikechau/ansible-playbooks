@@ -28,8 +28,10 @@ script:
 
   - "./scripts/ansible_docker_run.sh -vv"
 
+  - "mv tmp/ansible.log tmp/ansible.first_run.log"
+
   - >
-    ./scripts/ansible_docker_run.sh
+    ./scripts/ansible_docker_run.sh -vv
     | grep -q 'changed=0.*unreachable=0.*failed=0.*'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && cat tmp/ansible.log && exit 1)
