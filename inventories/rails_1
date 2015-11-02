@@ -7,9 +7,6 @@ default_server
 [database]
 default_server
 
-[servers]
-default_server
-
 [rails_1:children]
 application
 database

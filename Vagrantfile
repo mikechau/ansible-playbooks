@@ -11,7 +11,7 @@ Vagrant.configure(2) do |config|
     vb.customize ['modifyvm', :id, '--cpuexecutioncap', '80']
   end
 
-  config.vm.define 'default', primary: true do |v|
+  config.vm.define 'default', primary: true, autostart: false do |v|
     v.vm.network 'private_network', ip: '11.11.11.01'
 
     v.vm.provider 'virtualbox' do |vb|

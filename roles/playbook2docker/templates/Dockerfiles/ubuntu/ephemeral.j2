@@ -1,0 +1,21 @@
+FROM {{ playbook2docker_dockerfile_from }}
+MAINTAINER mikechau
+
+RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
+
+COPY .insecure_keys/test_key.rsa.pub /root/.ssh/authorized_keys
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y openssh-server locales
+
+RUN rm /etc/apt/apt.conf.d/docker-gzip-indexes
+
+RUN locale-gen "en_US" && locale-gen "en_US.UTF-8"
+RUN echo -e "en_US ISO-8859-1\nen_US.UTF-8 UTF-8" > /etc/locale.gen
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+EXPOSE 22
+
+CMD /usr/bin/supervisord

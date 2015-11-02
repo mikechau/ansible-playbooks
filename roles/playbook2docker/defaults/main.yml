@@ -1,0 +1,38 @@
+---
+playbook2docker_user: root
+
+playbook2docker_path: /tmp/docker
+
+playbook2docker_dockerfile_os: ubuntu
+playbook2docker_dockerfile_os_version: 14.04
+playbook2docker_dockerfile_from: "{{ playbook2docker_dockerfile_os }}:{{ playbook2docker_dockerfile_os_version }}"
+
+playbook2docker_dockerfile_template_path: "Dockerfiles/{{ playbook2docker_dockerfile_os }}/ephemeral.j2"
+
+playbook2docker_insecure_key_dir_path: "{{ lookup('env', 'PWD') }}/roles/playbook2docker/files/.insecure_keys"
+playbook2docker_insecure_keys_list:
+  - test_key.rsa
+  - test_key.rsa.pub
+
+playbook2docker_files_list:
+  - name: insecure keys for ssh w/o password
+    src: .insecure_keys
+
+playbook2docker_configs_list:
+  - name: supervisord config
+    src: configs/ephemeral/supervisord.conf.j2
+    dest: supervisord.conf
+
+playbook2docker_image_name: ansible_ephemeral_container_image
+playbook2docker_image_path: "{{ playbook2docker_path }}"
+
+playbook2docker_container_name: ansible_ephemeral_container
+# playbook2docker_expose_ports:
+playbook2docker_bind_ports:
+  - "9001:22"
+
+playbook2docker_wait_for_ports:
+  - name: ssh port
+    port: 9001
+    delay: 10
+    timeout: 500

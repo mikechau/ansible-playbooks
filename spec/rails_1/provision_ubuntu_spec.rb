@@ -107,11 +107,11 @@ describe 'Ubuntu 14.04 LTS', if: os[:family] == 'ubuntu' do
 
   context 'role: rvm_io.rvm1-ruby' do
     it 'installed rvm' do
-      expect(file('/home/vagrant/.rvm/bin/rvm')).to be_file
+      expect(file("/home/#{@ssh_user}/.rvm/bin/rvm")).to be_file
     end
 
     it 'installed ruby-2.2.3' do
-      expect(file('/home/vagrant/.rvm/rubies/ruby-2.2.3/bin/ruby')).to be_file
+      expect(file("/home/#{@ssh_user}/.rvm/rubies/ruby-2.2.3/bin/ruby")).to be_file
     end
   end
 

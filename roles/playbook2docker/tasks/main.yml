@@ -1,0 +1,57 @@
+---
+- name: create docker directory
+  file:
+    path: "{{ playbook2docker_path }}"
+    recurse: yes
+    state: directory
+
+- name: generate dockerfile
+  template:
+    src: "{{ playbook2docker_dockerfile_template_path }}"
+    dest: "{{ playbook2docker_path }}/Dockerfile"
+
+- name: ensure insecure key folder is protected
+  file:
+    path: "{{ playbook2docker_insecure_key_dir_path }}"
+    mode: 0700
+
+- name: ensure default keys are protected
+  file:
+    path: "{{ playbook2docker_insecure_key_dir_path }}/{{ item }}"
+    mode: 0400
+  with_items: "{{ playbook2docker_insecure_keys_list }}"
+
+- name: copy files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ playbook2docker_path }}"
+  with_items: "{{ playbook2docker_files_list }}"
+
+- name: generate configs
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ playbook2docker_path }}/{{ item.dest }}"
+  with_items: "{{ playbook2docker_configs_list }}"
+
+- name: check or build image
+  docker_image:
+    name: "{{ playbook2docker_image_name }}"
+    path: "{{ playbook2docker_image_path }}"
+    state: present
+
+- name: create client container
+  docker:
+    image: "{{ playbook2docker_image_name }}"
+    name: "{{ playbook2docker_container_name }}"
+    detach: false
+    expose: "{{ playbook2docker_expose_ports | default(omit) }}"
+    ports: "{{ playbook2docker_bind_ports | default(omit) }}"
+    state: started
+
+- name: wait for container port to be ready
+  wait_for:
+    port: "{{ item.port }}"
+    delay: "{{ item.delay | default(omit) }}"
+    timeout: "{{ item.timeout | default(omit) }}"
+    state: started
+  with_items: playbook2docker_wait_for_ports

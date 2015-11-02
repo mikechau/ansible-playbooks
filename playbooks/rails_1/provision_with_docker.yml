@@ -1,0 +1,9 @@
+---
+- name: docker provision
+  hosts: localhost
+  connection: local
+
+  roles:
+    - role: playbook2docker
+
+- include: provision.yml
