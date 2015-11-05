@@ -9,7 +9,7 @@ sudo: required
 dist: trusty
 
 env:
-  - SCENARIO=rails_1 STRATEGY=provision_with_docker TEST=true RSPEC_TEST_NAME=provision_ubuntu_spec
+  - INVENTORY=rails_1 PLAYBOOK=provision_with_docker TEST=true RSPEC_TEST_NAME=provision_ubuntu_spec
 
 services:
   - docker
@@ -24,7 +24,7 @@ install:
   - ./scripts/update_insecure_keys_permissions.sh
 
 script:
-  - "./scripts/ansible_syntax_check.sh $SCENARIO $STRATEGY"
+  - "./scripts/ansible_syntax_check.sh $INVENTORY $PLAYBOOK"
 
   - "./scripts/ansible_docker_run.sh -vv"
 
@@ -36,4 +36,4 @@ script:
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && cat tmp/ansible.log && exit 1)
 
-  - "rspec ./spec/${SCENARIO}/${RSPEC_TEST_NAME}.rb"
+  - "rspec ./spec/${INVENTORY}/${RSPEC_TEST_NAME}.rb"

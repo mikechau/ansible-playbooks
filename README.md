@@ -22,8 +22,8 @@ bundle install
 
 ## Playbooks
 
-### Scenario: rails_1
-#### Rails Blue/Green deploy with Passenger Standalone and Nginx
+### Inventory: rails_1
+#### Scenario: Rails Blue/Green deploy with Passenger Standalone and Nginx
 
 This playbook covers a scenario where you have a rails application that you want to deploy with Passenger Standalone and do blue/green deploys, for zero downtime.
 
@@ -33,11 +33,11 @@ It entails provisioning and deploying.
 
 #### Vagrant
 
-Vagrant is used to set up a virtualized environment, each scenario is defined as a specific virtual machine in the Vagrantfile.
+Vagrant is used to set up a virtualized environment, each inventory is defined as a specific virtual machine in the Vagrantfile.
 
 ```
-# Start vagrant for a scenario
-vagrant up ${scenario_name}
+# Start vagrant for a inventory
+vagrant up ${inventory_name}
 
 vagrant up rails_1
 ```
@@ -50,9 +50,9 @@ Serverspec is used to write RSpec tests to verify the playbook has run as intend
 # Run tests for everything
 rake
 
-# Run test for specific scenario
+# Run test for specific inventory
 
-TARGET_HOST=${scenario_name} rspec ./spec/${scenario_name}/${test_name}.rb
+TARGET_HOST=${inventory_name} rspec ./spec/${inventory_name}/${test_name}.rb
 
 TARGET_HOST=rails_1 rspec ./spec/rails_1/provision_ubuntu_spec.rb
 ```
