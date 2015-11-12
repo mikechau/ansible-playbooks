@@ -6,4 +6,4 @@ galaxy_roles/*
 *.swp
 tmp/*
 !tmp/.keep
-
+*.pyc
