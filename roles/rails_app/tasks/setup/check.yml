@@ -1,0 +1,5 @@
+---
+- name: check passenger instance registry dir path character length
+  fail:
+    msg: "Passenger Instance Registry Dir is more than 107 characters! Review your config, there is a 107 character hard limit by the OS!"
+  when: "(rails_app_server == 'passenger_standalone') and ((rails_app_passengerfile_config['instance_registry_dir'] | default(0) | length) > 107)"

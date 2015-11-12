@@ -1,0 +1,29 @@
+---
+- name: check if bundler is installed
+  shell: bash -lc 'which bundler'
+  args:
+    chdir: "{{ rails_app_build_path }}"
+  register: bundler_installed
+  ignore_errors: true
+  changed_when: false
+  failed_when: bundler_installed.rc != 0
+
+- name: install bundler (system)
+  shell: gem install bundler
+  args:
+    chdir: "{{ rails_app_build_path }}"
+  sudo: true
+  when: rails_app_ruby_manager == 'system' and bundler_installed | failed
+
+- name: install bundler (rvm)
+  shell: bash -lc 'gem install bundler'
+  args:
+    chdir: "{{ rails_app_build_path }}"
+  when: rails_app_ruby_manager == 'rvm' and bundler_installed | failed
+
+- name: bundle install
+  shell: "bash -lc 'bundle install {{ rails_app_bundle_install_flags }}'"
+  args:
+    chdir: "{{ rails_app_build_path }}"
+  register: bundle_install
+  changed_when: bundle_install.stdout.find('Installing') != -1

@@ -1,0 +1,13 @@
+---
+- include: setup/check.yml
+- include: setup/create_directories.yml
+- include: build/git_checkout.yml
+- include: build/create_directories.yml
+- include: build/generate_configs.yml
+- include: build/bundle_install.yml
+- include: build/rake/main.yml
+- include: deploy/create_release.yml
+- include: deploy/start_server/main.yml
+- include: deploy/link_to_current.yml
+- include: cleanup/purge_old_releases.yml
+- include: cleanup/purge_old_assets.yml

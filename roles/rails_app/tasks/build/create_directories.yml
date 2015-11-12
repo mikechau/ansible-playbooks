@@ -1,0 +1,20 @@
+---
+- name: sync application working copy to build
+  shell: "rsync --delay-updates --compress --archive --out-format='<<CHANGED>>%i %n%L' --exclude-from={{ rails_app_build_sync_exclusion_filter_path }} --delete-after --delete-excluded {{ rails_app_build_sync_protect_filters }} {{ rails_app_working_copy_path }}/ {{ rails_app_build_path }}"
+  args:
+    chdir: "{{ rails_app_base_path }}"
+  register: synchronize_to_build
+  changed_when: synchronize_to_build.stdout.find('CHANGED') != -1
+
+- name: create build sub dirs
+  file:
+    path: "{{ rails_app_build_sub_dirs }}/{{ item }}"
+    state: directory
+  with_items: rails_app_build_sub_dirs
+
+- name: add symlinks to build
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ rails_app_build_path }}/{{ item.dest }}"
+    state: link
+  with_items: rails_app_build_symlinks

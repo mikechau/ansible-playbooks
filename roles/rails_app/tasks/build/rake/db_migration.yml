@@ -1,0 +1,11 @@
+---
+- name: rake db:migrate
+  command: bash -lc 'bin/rake db:migrate'
+  args:
+    chdir: "{{ rails_app_build_path }}"
+  environment: rails_app_environment
+  register: rake_db_migrate
+  failed_when: rake_db_migrate.rc != 0
+  changed_when: rake_db_migrate.rc == 0 and 'migrating' in rake_db_migrate.stdout
+  run_once: yes
+  when: not rails_app_rake_db_schema_load

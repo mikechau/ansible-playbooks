@@ -1,0 +1,27 @@
+---
+- name: git clone application repo
+  git:
+    repo: "{{ rails_app_git_repo }}"
+    dest: "{{ rails_app_working_copy_path }}"
+    version: "{{ rails_app_git_repo_version | default('master') }}"
+    accept_hostkey: yes
+    force: yes
+    depth: "{{ rails_app_git_depth | default(omit) }}"
+  ignore_errors: true
+  register: git_checkout
+
+- name: remove build folder on checkout failure
+  file:
+    path: "{{ rails_app_working_copy_path }}"
+    state: absent
+  when: git_checkout | failed
+
+- name: recheckout repo on checkout failure
+  git:
+    repo: "{{ rails_app_git_repo }}"
+    dest: "{{ rails_app_working_copy_path }}"
+    version: "{{ rails_app_git_repo_branch | default('master') }}"
+    accept_hostkey: yes
+    force: yes
+    depth: "{{ rails_app_git_depth | default(omit) }}"
+  when: git_checkout | failed

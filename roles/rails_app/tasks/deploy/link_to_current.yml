@@ -1,0 +1,6 @@
+---
+- name: link latest release to current
+  file:
+    src: "{{ rails_app_current_release_path }}"
+    dest: "{{ rails_app_current_path }}"
+    state: link

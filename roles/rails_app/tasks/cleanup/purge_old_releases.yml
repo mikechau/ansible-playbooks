@@ -1,0 +1,7 @@
+---
+- name: purge old releases
+  shell: "ls -dt */ | tail -n +{{ rails_app_release_keep_count | int + 1 }} | xargs rm -rf -v"
+  args:
+    chdir: "{{ rails_app_releases_path }}"
+  register: purge_old_releases
+  changed_when: purge_old_releases.rc == 0 and ('removed' in purge_old_releases.stdout)

@@ -17,6 +17,8 @@
     - role: development_packages
       sudo: yes
 
+    - role: git
+
     - role: mikechau.jemalloc
       jemalloc_install_from: source
       sudo: yes
@@ -24,6 +26,11 @@
     - role: rvm_io.rvm1-ruby
       sudo: yes
 
+    - role: nodejs
+      sudo: yes
+
     - role: nginx
       sudo: yes
 
+    - role: curl
+      sudo: yes

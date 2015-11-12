@@ -1,0 +1,6 @@
+---
+- name: create configs
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ rails_app_build_path }}/config/{{ item.dest }}"
+  with_items: rails_app_db_config_templates

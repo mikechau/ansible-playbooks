@@ -1,0 +1,6 @@
+---
+rails_app_ruby_manager: rvm
+
+rails_app_db_name: rails_1
+rails_app_db_username: rails_1
+rails_app_db_password: supersecretpassword

@@ -1,0 +1,4 @@
+---
+- include: db_create.yml
+- include: db_migration.yml
+- include: assets_precompile.yml

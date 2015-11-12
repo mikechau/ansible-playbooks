@@ -1,0 +1,145 @@
+---
+# Must be defined inline with the playbook
+rails_app_strategy: provision
+
+rails_app_user: "{{ ansible_ssh_user }}"
+rails_app_group: "{{ rails_app_user }}"
+rails_app_name: rails_app
+
+# ENV
+rails_app_environment:
+  RAILS_ENV: production
+  RAILS_ASSETS_MANIFEST_PATH: "{{ rails_app_build_path }}/asset_manifest.json"
+
+# PATHS
+rails_app_base_path: "/home/{{ rails_app_user }}/{{ rails_app_name }}"
+
+rails_app_releases_path: "{{ rails_app_base_path }}/releases"
+rails_app_current_release_id: "{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}_{{ ansible_date_time.tz }}"
+rails_app_current_release_path: "{{ rails_app_releases_path }}/{{ rails_app_current_release_id }}"
+
+rails_app_current_path: "{{ rails_app_base_path }}/current"
+
+rails_app_working_copy_path: "{{ rails_app_base_path }}/working_copy"
+rails_app_build_path: "{{ rails_app_base_path }}/build"
+
+rails_app_shared_path: "{{ rails_app_base_path }}/shared"
+rails_app_shared_run_path: "{{ rails_app_shared_path }}/run"
+rails_app_shared_run_server_path: "{{ rails_app_shared_run_path }}"
+rails_app_shared_bundle_path: "{{ rails_app_shared_path }}/bundle"
+rails_app_shared_log_path: "{{ rails_app_shared_path }}/log"
+rails_app_shared_public_assets_path: "{{ rails_app_shared_path }}/public/assets"
+rails_app_shared_tmp_path: "{{ rails_app_shared_path }}/tmp"
+
+# SETUP DIRS
+rails_app_setup_dirs:
+  - "{{ rails_app_build_path }}"
+  - "{{ rails_app_releases_path }}"
+  - "{{ rails_app_shared_run_server_path }}"
+  - "{{ rails_app_shared_log_path }}"
+  - "{{ rails_app_shared_public_assets_path }}"
+  - "{{ rails_app_shared_tmp_path }}"
+
+# BUILD DIRS
+rails_app_build_sub_dirs: []
+
+rails_app_build_symlinks:
+  - name: log
+    dest: log
+    src: "{{ rails_app_shared_log_path }}"
+  - name: public assets
+    dest: public/assets
+    src: "{{ rails_app_shared_public_assets_path }}"
+  - name: temp
+    dest: tmp
+    src: "{{ rails_app_shared_tmp_path }}"
+  - name: run
+    dest: run
+    src: "{{ rails_app_shared_run_path }}"
+
+# GIT
+rails_app_git_repo: https://github.com/mikechau/generic_app.git
+rails_app_git_repo_version: master
+# rails_app_git_depth:
+
+# BUILD FILTERS
+rails_app_build_sync_exclusion_filter_path: "{{ rails_app_working_copy_path }}/.slugignore"
+
+rails_app_build_sync_protect_filters: "{{ rails_app_build_symlinks | map(attribute='dest') | rsync_filter_map('P', '/') | join(' ') }}"
+
+rails_app_build_sync_excluded_files:
+  - ansible
+  - .rubocop.yml
+  - .rspec
+  - README.md
+  - Vagrantfile
+  - vagrant
+  - requirements.yml
+  - Guardfile
+  - log
+  - spec
+  - config/*.yml.example
+
+# RUBY / BUNDLER
+rails_app_ruby_manager: system
+rails_app_bundle_install_flags: "--without development test --deployment -j4 --path {{ rails_app_shared_bundle_path }}"
+
+# DATABASE CONFIG
+rails_app_db_adapter: postgresql
+rails_app_db_host: localhost
+rails_app_db_pool: 25
+# rails_app_db_name: # specify db name, default will use $rails_app_name_$environment
+rails_app_db_username: rails_app
+rails_app_db_password: rails_app_password
+rails_app_db_connection: socket # socket or port
+rails_app_db_port: 5432
+rails_app_db_osx_socket_path: /var/pgsql_socket/.s.PGSQL.5432
+rails_app_db_socket_path: /var/run/postgresql/.s.PGSQL.5432
+
+# CONFIGS
+rails_app_db_config_templates:
+  - name: database.yml
+    src: "../../templates/config/database.production.yml.j2"
+    dest: database.yml
+  - name: application.yml
+    src: "../../templates/config/application.production.yml.j2"
+    dest: application.yml
+
+rails_app_env_config:
+  SECRET_KEY_BASE: supersecretkeypleasereplacemewithsomethingelseok
+
+rails_app_env_config_test:
+  SECRET_KEY_BASE: thisisfortesting
+
+# RAKE TASKS
+rails_app_rake_db_create: false
+rails_app_rake_db_schema_load: false
+rails_app_rake_assets_precompile: true
+
+# SERVERS
+rails_app_server: passenger_standalone # passenger-standalone, TODO: passenger unicorn, puma, thin, custom
+
+rails_app_server_processes_count: 1
+
+rails_app_passengerfile_json_src_path: ../../../templates/passenger/Passengerfile.json.j2
+
+rails_app_passengerfile_config:
+  # nginx_config_template: '"{{ rails_app_current_release_path }}/nginx.conf.erb"'
+  environment: '"production"'
+  daemonize: "true"
+  socket_file: '"{{ rails_app_shared_run_path }}/{{ rails_app_name }}.1.r{{ rails_app_current_release_id }}.socket"'
+  user: '"{{ rails_app_user }}"'
+  log_file: '"{{ rails_app_shared_log_path}}/passenger.log"'
+  pid_file: '"{{ rails_app_shared_run_path }}/{{ rails_app_name }}.1.r{{ rails_app_current_release_id }}.pid"'
+  instance_registry_dir: '"{{ rails_app_shared_run_server_path }}/reg.1.r{{ rails_app_current_release_id }}"' # 107 character hard limit
+  friendly_error_pages: "false"
+  max_pool_size: 2
+  min_instances: 2
+  pool_idle_time: 0
+  engine: '"builtin"'
+
+# RELEASES
+rails_app_release_keep_count: 10
+
+# PURGE
+rails_app_purge_old_assets: false

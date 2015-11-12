@@ -1,0 +1,9 @@
+---
+- name: rake assets:precompile (remote)
+  command: bash -lc 'bin/rake assets:precompile'
+  args:
+    chdir: "{{ rails_app_build_path }}"
+  environment: rails_app_environment
+  register: rake_assets_precompile
+  changed_when: "rake_assets_precompile.rc == 0 and ('writing' in rake_assets_precompile.stdout)"
+  when: rails_app_rake_assets_precompile

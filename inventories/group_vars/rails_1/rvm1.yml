@@ -6,4 +6,3 @@ rvm1_rubies:
 rvm1_install_flags: --auto-dotfiles --user-install
 rvm1_ruby_install_flags: --with-jemalloc
 rvm1_install_path: "/home/{{ rvm1_user }}/.rvm"
-

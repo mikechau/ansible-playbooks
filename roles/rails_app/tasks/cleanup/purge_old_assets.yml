@@ -1,0 +1,8 @@
+---
+- name: purge old assets
+  command: bash -lc 'bin/rake assets:clean'
+  args:
+    chdir: "{{ rails_app_current_release_path }}"
+  register: purge_old_assets
+  # changed_when: purge_old_assets.rc == 0 and ('' in purge_old_assets)
+  when: rails_app_purge_old_assets

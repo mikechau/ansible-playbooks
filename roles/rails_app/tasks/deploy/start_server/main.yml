@@ -1,0 +1,3 @@
+---
+- include: _passenger_standalone.yml
+  when: rails_app_server == 'passenger_standalone'

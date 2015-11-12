@@ -1,0 +1,16 @@
+---
+- name: rake db:create
+  command: bash -lc 'bin/rake db:create'
+  args:
+    chdir: "{{ rails_app_build_path }}"
+  environment: rails_app_environment
+  register: rake_db_create
+  changed_when: "rake_db_create.rc == 0 and ('already exists' not in rake_db_create.stderr)"
+  when: rails_app_rake_db_create
+
+- name: rake db:schema:load
+  command: bash -lc 'rake db:schema:load'
+  args:
+    chdir: "{{ rails_app_build_path }}"
+  environment: rails_app_environment
+  when: rails_app_rake_db_schema_load

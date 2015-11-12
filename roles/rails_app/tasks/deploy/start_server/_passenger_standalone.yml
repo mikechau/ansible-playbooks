@@ -1,0 +1,41 @@
+---
+- name: create passenger instance registry dir
+  file:
+    path: "{{ rails_app_shared_run_server_path }}/reg.{{ item }}.r{{ rails_app_current_release_id }}"
+    state: directory
+    recurse: yes
+  with_sequence: "count={{ rails_app_server_processes_count }}"
+  register: passenger_instance_register_dirs
+
+- debug:
+    msg: "var={{ passenger_instance_register_dirs.results[0].invocation.module_complex_args.path }}"
+
+- name: generate passenger-exec wrapper script
+  template:
+    src: "../../../templates/passenger/scripts/passenger-exec.j2"
+    dest: "{{ rails_app_current_release_path }}/bin/passenger-exec"
+    mode: "u=rwx,g=rx,o=rx"
+
+- name: generate passenger-start-instance scripts
+  template:
+    src: "../../../templates/passenger/scripts/passenger-start-instance.j2"
+    dest: "{{ rails_app_current_release_path }}/bin/passenger-start-instance_{{ item.item }}"
+    mode: "u=rwx,g=rx,o=rx"
+  with_items: passenger_instance_register_dirs.results
+
+- name: generate passenger-stop-instance scripts
+  template:
+    src: "../../../templates/passenger/scripts/passenger-stop-instance.j2"
+    dest: "{{ rails_app_current_release_path }}/bin/passenger-stop-instance_{{ item.item }}"
+    mode: "u=rwx,g=rx,o=rx"
+  with_items: passenger_instance_register_dirs.results
+
+- name: generate Passengerfile.json
+  template:
+    src: "{{ rails_app_passengerfile_json_src_path }}"
+    dest: "{{ rails_app_current_release_path }}/Passengerfile.json"
+
+# - name: start passenger-standalone
+#   shell:
+
+# - name: 

@@ -1,0 +1,7 @@
+---
+- name: create application directories
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+  with_items: rails_app_setup_dirs
