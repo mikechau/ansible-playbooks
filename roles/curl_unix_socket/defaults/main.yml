@@ -1,0 +1,11 @@
+---
+curl_unix_socket_force_install: no
+
+curl_unix_socket_tag: pre-1.0
+curl_unix_socket_download_url: "https://github.com/Soulou/curl-unix-socket/releases/download/{{ curl_unix_socket_tag }}/curl-unix-socket.tar.gz"
+curl_unix_socket_download_tmp_base_path: /tmp
+curl_unix_socket_download_tmp_path: "{{ curl_unix_socket_download_tmp_base_path }}/curl-unix-socket.tar.gz"
+
+curl_unix_socket_install_path: /usr/local/bin
+curl_unix_socket_bin: curl-unix-socket
+curl_unix_socket_path: "{{ curl_unix_socket_install_path }}/{{ curl_unix_socket_bin }}"

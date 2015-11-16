@@ -1,0 +1,40 @@
+# TODO: Ansible 2.0 we can pass a url to the unarchive module
+---
+- name: detect curl-unix-socket
+  stat:
+    path: "{{ curl_unix_socket_path }}"
+  register: curl_unix_socket
+
+- name: remove curl-unix-socket
+  file:
+    path: "{{ curl_unix_socket_path }}"
+    state: absent
+  when: curl_unix_socket_force_install
+
+- name: create tmp download directory
+  file:
+    path: "{{ curl_unix_socket_download_tmp_base_path }}"
+    recurse: yes
+    state: directory
+  when: curl_unix_socket_force_install or not curl_unix_socket.stat.exists
+
+- name: download curl-unix-socket
+  get_url:
+    url: "{{ curl_unix_socket_download_url }}"
+    dest: "{{ curl_unix_socket_download_tmp_path }}"
+  register: curl_unix_socket_download
+  when: curl_unix_socket_force_install or not curl_unix_socket.stat.exists
+
+- name: unarchive binary
+  unarchive:
+    src: "{{ curl_unix_socket_download.dest }}"
+    dest: "{{ curl_unix_socket_install_path }}"
+    copy: no
+    creates: "{{ curl_unix_socket_bin }}"
+  when: curl_unix_socket_force_install or not curl_unix_socket.stat.exists
+
+- name: cleanup tmp download
+  file:
+    path: "{{ curl_unix_socket_download.dest }}"
+    state: absent
+  when: curl_unix_socket_force_install or (curl_unix_socket_download is defined and curl_unix_socket_download.dest)
