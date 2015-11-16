@@ -1,0 +1,3 @@
+---
+nodejs_version: node_4.x
+nodejs_ubuntu_distro: trusty

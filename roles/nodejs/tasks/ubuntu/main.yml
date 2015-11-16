@@ -1,0 +1,28 @@
+---
+- name: remove old ppa if it exists
+  apt_repository:
+    repo: ppa:chris-lea/node.js
+    state: absent
+
+- name: remove old sources list
+  shell: rm /etc/apt/sources.list.d/chris-lea-node_js-*.list
+  register: remove_old_sources_list
+  failed_when: false
+  changed_when: remove_old_sources_list.rc == 0
+
+- name: add nodesource signing key
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+
+- name: add nodesource repository
+  template:
+    src: ../../templates/etc/apt/sources.list.d/nodesource.list.j2
+    dest: /etc/apt/sources.list.d/nodesource.list
+
+- name: install nodejs
+  apt:
+    name: nodejs
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
