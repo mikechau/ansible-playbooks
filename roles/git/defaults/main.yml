@@ -1,0 +1,7 @@
+---
+git_config_dest: ~/.gitconfig
+
+git_config_email: git@localhost.local
+git_config_name: localhost
+
+git_config_default_push: simple

@@ -1,0 +1,5 @@
+---
+- name: add git config
+  template:
+    src: gitconfig.j2
+    dest: "{{ git_config_dest }}"
