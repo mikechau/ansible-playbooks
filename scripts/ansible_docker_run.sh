@@ -6,12 +6,12 @@ else
   INVENTORIES_PATH=test_inventories
 fi
 
-if [[ -z "$INVENTORY" ]] ; then
+if [[ -z "$INVENTORY" ]]; then
   echo "ERROR: INVENTORY is undefined!"
   exit 1
 fi
 
-if [[ -z "$PLAYBOOK" ]] ; then
+if [[ -z "$PLAYBOOK" ]]; then
   echo "ERROR: PLAYBOOK is undefined!"
   exit 1
 fi
