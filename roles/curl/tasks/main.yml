@@ -1,0 +1,74 @@
+---
+- name: detect curl version
+  command: curl --version
+  register: detect_curl_version
+  ignore_errors: true
+  failed_when: (detect_curl_version.rc != 0) or (detect_curl_version.stdout.find('curl' + curl_version) == -1 and detect_curl_version.stdout.find('libcurl/' + curl_version) == -1)
+  changed_when: false
+
+- name: detect curl src path
+  stat:
+    path: "{{ curl_download_src_path }}"
+  register: detect_curl_src_path
+  when: curl_force_install or (detect_curl_version | failed)
+
+- name: uninstall curl
+  command: make uninstall
+  args:
+    chdir: "{{ curl_download_src_path }}"
+  ignore_errors: true
+  when: curl_force_install and detect_curl_src_path.stat.exists
+
+- name: remove curl src
+  file:
+    path: "{{ curl_download_src_path }}"
+    state: absent
+  when: curl_force_install and detect_curl_src_path.stat.exists
+
+- name: download curl
+  get_url:
+    url: "{{ curl_download_url }}"
+    dest: "{{ curl_download_tmp_path }}"
+  register: curl_download
+  when: curl_force_install or (detect_curl_version | failed)
+
+- name: extract curl
+  unarchive:
+    src: "{{ curl_download.dest }}"
+    dest: "{{ curl_download_src_base_path }}"
+    copy: no
+  when: curl_force_install or (detect_curl_version | failed)
+
+- name: configure
+  command: "./configure"
+  args:
+    chdir: "{{ curl_download_src_path }}"
+  when: curl_force_install or (detect_curl_version | failed)
+
+- name: make
+  command: make
+  args:
+    chdir: "{{ curl_download_src_path }}"
+  when: curl_force_install or (detect_curl_version | failed)
+
+- name: make install
+  command: make install
+  args:
+    chdir: "{{ curl_download_src_path }}"
+  when: curl_force_install or (detect_curl_version | failed)
+
+- name: cleanup download
+  file:
+    path: "{{ curl_download.dest }}"
+    state: absent
+  when: curl_force_install or (detect_curl_version | failed)
+
+- name: reload ldconfig
+  command: ldconfig
+  when: curl_force_install or (detect_curl_version | failed)
+
+- name: redetect curl version
+  command: curl --version
+  register: redetect_curl_version
+  failed_when: (redetect_curl_version.rc != 0) or (redetect_curl_version.stdout.find('curl' + curl_version) == -1 and redetect_curl_version.stdout.find('libcurl/' + curl_version) == -1)
+  when: curl_force_install or (detect_curl_version | failed)

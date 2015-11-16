@@ -1,0 +1,9 @@
+---
+curl_force_install: no
+
+curl_version: 7.43.0
+curl_download_url: "http://curl.haxx.se/download/curl-{{ curl_version }}.tar.gz"
+
+curl_download_tmp_path: "/tmp/curl-{{ curl_version }}.tar.gz"
+curl_download_src_base_path: /usr/local/src
+curl_download_src_path: "{{ curl_download_src_base_path }}/curl-{{ curl_version }}"
