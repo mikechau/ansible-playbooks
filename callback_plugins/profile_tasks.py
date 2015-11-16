@@ -2,7 +2,6 @@ import datetime
 import os
 import time
 
-
 class CallbackModule(object):
     """
     A plugin for timing tasks
@@ -46,8 +45,8 @@ class CallbackModule(object):
             reverse=True,
         )
 
-        # Just keep the top 10
-        results = results[:10]
+        # Just keep the top 25
+        results = results[:25]
 
         # Print the timings
         for name, elapsed in results:
