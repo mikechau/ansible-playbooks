@@ -27,8 +27,6 @@ script:
 
   - "./scripts/ansible_docker_run.sh -vv"
 
-  - "mv tmp/ansible.log tmp/ansible.first_run.log"
-
   - >
     ./scripts/ansible_docker_run.sh -vv
     | grep -q 'changed=0.*unreachable=0.*failed=0.*'
